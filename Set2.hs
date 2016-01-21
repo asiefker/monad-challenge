@@ -47,3 +47,15 @@ queryGreek d key = case lookupMay key d of
                         Just m -> case headMay xs of
                             Nothing -> Nothing
                             Just h -> divMay (fromInteger m) (fromInteger h)
+
+chain:: (a -> Maybe b) -> Maybe a -> Maybe b
+chain _ Nothing = Nothing
+chain f (Just a)= f a
+
+link :: Maybe a -> (a-> Maybe b) -> Maybe b
+link = flip chain
+
+queryGreek2 :: GreekData -> String -> Maybe Double
+queryGreek2 d key = let t = chain maximumMay (chain tailMay $ lookupMay key d )
+                        h = chain headMay $ lookupMay key d 
+                    in chain (\ ta -> chain (divMay (fromInteger ta) . fromInteger) h ) t
