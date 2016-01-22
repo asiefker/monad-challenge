@@ -6,23 +6,25 @@ module Set1 where
 import MCPrelude
 
 allPairs :: [a] -> [b] -> [(a,b)]
-allPairs [] _ =  []
-allPairs (x:xs) bs = _allPairs x bs ++ allPairs xs bs 
-
-_allPairs :: a -> [b] -> [(a,b)]
-_allPairs _ [] = []
-_allPairs a (x:xs) = (a,x) : _allPairs a xs 
+allPairs = allPerms (,) 
 
 data Card = Card Int String
-
-
 instance Show Card where 
         show (Card r s) = show r ++ s
 
 allCards :: [Int] -> [String] -> [Card]
-allCards [] _ = []
-allCards (x:rs) bs = _allCards x bs ++ allCards rs bs
+allCards  = allPerms Card  
 
-_allCards :: Int -> [String] -> [Card]
-_allCards _ [] = []
-_allCards r (s:ss) = Card r s : _allCards r ss
+allPerms :: (a -> b -> c) -> [a] -> [b] -> [c]
+allPerms f as  = permStep (permStep [f] as)    
+
+_allPerms _ _ [] = []
+_allPerms f a (b:bs) = f a b : _allPerms f a bs
+
+allPerms3 :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+allPerms3 f as bs  = permStep (permStep (permStep [f] as) bs)
+
+permStep :: [a -> b] -> [a] -> [b]
+permStep [] _ = []
+permStep (f:fs) as = map f as ++ permStep fs as 
+
