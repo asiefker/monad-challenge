@@ -59,3 +59,16 @@ queryGreek2 :: GreekData -> String -> Maybe Double
 queryGreek2 d key = let t = chain maximumMay (chain tailMay $ lookupMay key d )
                         h = chain headMay $ lookupMay key d 
                     in chain (\ ta -> chain (divMay (fromInteger ta) . fromInteger) h ) t
+
+addSalaries :: [(String, Integer)] -> String -> String -> Maybe Integer
+addSalaries d n1 n2 = link (lookupMay n1 d) (\s1 -> link (lookupMay n2 d) (\s2 -> Just $ s1 + s2) )
+
+
+addSalaries2 :: [(String, Integer)] -> String -> String -> Maybe Integer
+addSalaries2 d n1 n2 = ylink (+) (lookupMay n1 d) (lookupMay n2 d)
+
+ylink:: (a->b->c)->Maybe a -> Maybe b -> Maybe c 
+ylink f ma mb = link ma (\ a -> link mb  (mkMaybe . f a) )
+
+mkMaybe :: a -> Maybe a
+mkMaybe = Just 
