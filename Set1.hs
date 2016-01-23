@@ -9,20 +9,34 @@ fiveRands::[Integer]
 fiveRands=recur 1 (mkSeed 1)
 
 recur 6 _ = []
-recur x seed = let r = rand seed
+recur x seed = let r = Set1.rand seed
                     in fst r : recur (x+1) (snd r) 
+-- randEven::Gen Integer
+-- randEven s = rand :e * 2 
+rand :: Gen Integer
+rand  = MCPrelude.rand  
 
-randLetter::Seed -> (Char, Seed)
-randLetter seed = let (i,s) = rand seed
-                   in (toLetter i, s)
+randLetter:: Gen Char
+randLetter = generalA toLetter 
 
 randString3::String
-randString3 = recurL 1 (mkSeed 1) 
-
-recurL 4 _ = ""
-recurL x seed = let (l,s)  = randLetter seed
-                    in l : recurL (x+1) s
+randString3 = [l1, l2, l3]
+    where 
+        (l1, s1) = randLetter (mkSeed 1)
+        (l2, s2) = randLetter s1 
+        (l3, _) = randLetter s2 
 
 type Gen a = Seed -> (a, Seed)
-randG :: Gen Integer
-randG s = (1, mkSeed 1)
+                     
+randEven :: Gen Integer
+randEven = generalA (*2) 
+
+randOdd :: Gen Integer
+randOdd= generalA (+1) 
+
+randTen :: Gen Integer
+randTen = generalA (*10) 
+
+generalA::(Integer->a)-> Gen a
+generalA f s = ( f i, s') 
+    where(i,s') =  Set1.rand s
