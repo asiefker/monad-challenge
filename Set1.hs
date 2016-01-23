@@ -21,10 +21,10 @@ randLetter = generalA toLetter
 
 randString3::String
 randString3 = [l1, l2, l3]
-    where 
+    where
         (l1, s1) = randLetter (mkSeed 1)
-        (l2, s2) = randLetter s1 
-        (l3, _) = randLetter s2 
+        (l2, s2) = randLetter s1
+        (l3, _) = randLetter s2
 
 type Gen a = Seed -> (a, Seed)
                      
@@ -55,4 +55,7 @@ generalB f ga gb s = let  (a,s') = ga s
                         in (f a b, s'')
 
 generalPair2::Gen a -> Gen b -> Gen (a,b)
-generalPair2 = generalB (,)  
+generalPair2 = generalB (,) 
+
+repRandom :: [Gen a] -> Gen [a]
+repRandom  as s = foldl (\b a-> let (a', s') = a (snd b) in (fst b ++ [a'],s')) ([], s) as 
