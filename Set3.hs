@@ -18,9 +18,6 @@ allCards  = allPerms Card
 allPerms :: (a -> b -> c) -> [a] -> [b] -> [c]
 allPerms f as  = permStep (permStep [f] as)    
 
-_allPerms _ _ [] = []
-_allPerms f a (b:bs) = f a b : _allPerms f a bs
-
 allPerms3 :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
 allPerms3 f as bs  = permStep (permStep (permStep [f] as) bs)
 
