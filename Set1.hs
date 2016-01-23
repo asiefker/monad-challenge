@@ -58,4 +58,11 @@ generalPair2::Gen a -> Gen b -> Gen (a,b)
 generalPair2 = generalB (,) 
 
 repRandom :: [Gen a] -> Gen [a]
-repRandom  as s = foldl (\b a-> let (a', s') = a (snd b) in (fst b ++ [a'],s')) ([], s) as 
+repRandom  as s = foldl (\b a-> let (a', s') = a (snd b) in (fst b ++ [a'],s')) (mkGen [] s) as
+
+genTwo :: Gen a -> (a -> Gen b) -> Gen b
+genTwo a f s = let (a', s') = a s 
+                  in f a' s'
+
+mkGen :: a -> Gen a
+mkGen a s = (a,s)
