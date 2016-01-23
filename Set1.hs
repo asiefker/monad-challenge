@@ -40,3 +40,11 @@ randTen = generalA (*10)
 generalA::(Integer->a)-> Gen a
 generalA f s = ( f i, s') 
     where(i,s') =  Set1.rand s
+
+randPair::Gen (Char, Integer)
+randPair = generalPair randLetter Set1.rand
+
+generalPair::Gen a -> Gen b -> Gen (a,b)
+generalPair ga gb s =  let  (a,s') = ga s
+                            (b,s'') = gb s'
+                        in ((a,b), s'') 
