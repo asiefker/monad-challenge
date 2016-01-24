@@ -11,10 +11,6 @@ class Monad m where
     bind::m a -> (a -> m b) -> m b
     return:: a-> m a 
 
-instance Monad [] where 
-    return a = [a]
-    bind as f = foldr ((++).f) [] as 
-
 instance Monad (Gen s) where 
     return a = Gen (\ s -> (a,s))
     bind ma f = Gen $ \s -> let (a', s') = run ma s 
