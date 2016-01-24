@@ -7,8 +7,6 @@ import MCPrelude
 
 newtype Gen s a = Gen { run:: s -> (a, s)}
 
-data Maybe a = Just a | Nothing
-
 class Monad m where 
     bind::m a -> (a -> m b) -> m b
     return:: a-> m a 
@@ -16,15 +14,6 @@ class Monad m where
 instance Monad [] where 
     return a = [a]
     bind as f = foldr ((++).f) [] as 
-
-instance Monad Maybe  where  
-    return = Just 
-    bind Nothing _ = Nothing
-    bind (Just a) f= f a
-
-instance Show a => Show (Maybe a) where 
-        show (Just a) = "Just " ++ show a
-        show Nothing = "Nothing"
 
 instance Monad (Gen s) where 
     return a = Gen (\ s -> (a,s))
